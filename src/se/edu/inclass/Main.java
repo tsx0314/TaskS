@@ -7,6 +7,8 @@ import se.edu.inclass.task.TaskNameComparator;
 
 import java.util.ArrayList;
 
+import static java.util.stream.Collectors.toList;
+
 public class Main {
 
 	private TaskNameComparator taskNameComparator;
@@ -18,13 +20,15 @@ public class Main {
 
 
 		System.out.println();
-		System.out.println("Printing deadlines");
+		System.out.println("Printing deadlines before soring");
 		printDeadlines(tasksData);
 
-		//System.out.println("Total number of deadlines: " + countDeadlines(tasksData));
-		System.out.println("Total number of deadlines using stream: " + countDeadlinesUsingStream(tasksData));
-		printData(tasksData);
+		System.out.println("Total number of deadlines after sorting: " + countDeadlines(tasksData));
+		//System.out.println("Total number of deadlines using stream: " + countDeadlinesUsingStream(tasksData));
+		//printData(tasksData);
 		printDataUsingStreams(tasksData);
+		ArrayList<Task> filteredList = filterTaskListUsingStream("11",tasksData);
+
 
 	}
 
@@ -68,11 +72,20 @@ public class Main {
 		}
 	}
 
-	public static void printDeadlineUsingStream(ArrayList<Task> tasks){
+	public static void printDeadlineUsingStream(ArrayList<Task> tasks) {
 		System.out.println("Print DDL using stream");
 		tasks.stream() //instanceof Deadline - this is the checking point
 				.filter(t -> t instanceof Deadline) //predicate - boolean output //lamda function
-				.forEach(System.out::println);
+				.sorted((a,b) -> a.getDescription().compareToIgnoreCase((b.getDescription()))); //compare the first one with 2nd one
+
+	}
+
+	public static ArrayList<Task> filterTaskListUsingStream(String filterString,ArrayList<Task> tasks) {
+		ArrayList<Task> filteredList = new ArrayList<>();
+		tasks.stream()
+				.filter(t->t.getDescription().contains(filterString))
+				.collect(toList());
+		return filteredList;
 	}
 }
 
